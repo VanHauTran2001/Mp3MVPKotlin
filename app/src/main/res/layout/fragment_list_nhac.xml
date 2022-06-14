@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/ln_toolbar"
+            android:background="@color/teal_700">
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_baseline_arrow_back_24"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="5dp"
+                android:id="@+id/imgBackHome"/>
+            <EditText
+                android:id="@+id/edt_Search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="9"
+                android:layout_marginRight="5dp"
+                android:background="@drawable/search_bg"
+                android:drawableLeft="@drawable/ic_seacrch"
+                android:drawablePadding="8dp"
+                android:ems="10"
+                android:hint="Tìm kiếm bài hát"
+                android:textColor="@color/white"
+                android:textColorHint="@color/white"
+                android:inputType="textPersonName"
+                android:layout_marginBottom="10dp"
+                android:padding="10dp" />
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_seacrch"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+                android:id="@+id/imgSearch"/>
+        </LinearLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ln_toolbar">
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swiperefresh"
+                android:visibility="gone"
+                android:layout_width="56dp"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:layout_height="56dp">
+                <ProgressBar
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"/>
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recylerBaiHat"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp" />
+        </RelativeLayout>
+    </RelativeLayout>
+</layout>

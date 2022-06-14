@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <layout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:id="@+id/linearLayout"
+        tools:viewBindingIgnore="true"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="-1dp"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/edtEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/custom_edittext"
+                android:drawableLeft="@drawable/ic_baseline_email_24"
+                android:drawablePadding="15dp"
+                android:hint="Email"
+                android:inputType="text"
+                android:maxLength="30"
+                android:maxLines="1"
+                android:padding="10dp"
+                android:textColor="@color/black" />
+            <EditText
+                android:id="@+id/edtPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:inputType="textPassword"
+                android:maxLength="15"
+                android:maxLines="1"
+                android:drawableLeft="@drawable/ic_baseline_lock_24"
+                android:drawablePadding="15dp"
+                android:textColor="@color/black"
+                android:background="@drawable/custom_edittext"
+                android:hint="Password"
+                android:layout_below="@id/edtUser"
+                android:padding="10dp" />
+            <EditText
+                android:id="@+id/edtUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/custom_edittext"
+                android:drawableLeft="@drawable/ic_baseline_person_24"
+                android:drawablePadding="15dp"
+                android:hint="User"
+                android:layout_below="@id/edtEmail"
+                android:inputType="text"
+                android:maxLength="30"
+                android:maxLines="1"
+                android:padding="10dp"
+                android:textColor="@color/black" />
+            <EditText
+                android:id="@+id/edtConfirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:inputType="textPassword"
+                android:maxLength="15"
+                android:maxLines="1"
+                android:drawableLeft="@drawable/ic_baseline_lock_24"
+                android:drawablePadding="15dp"
+                android:textColor="@color/black"
+                android:background="@drawable/custom_edittext"
+                android:hint="Confirm Password"
+                android:layout_below="@id/edtPassword"
+                android:padding="10dp" />
+
+            <EditText
+                android:id="@+id/edtPhone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/edtConfirmPassword"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/custom_edittext"
+                android:drawableLeft="@drawable/ic_baseline_phone_24"
+                android:drawablePadding="15dp"
+                android:hint="Phone number"
+                android:inputType="number"
+                android:maxLength="15"
+                android:maxLines="1"
+                android:padding="10dp"
+                android:textColor="@color/black" />
+        </RelativeLayout>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="30dp"
+            android:background="@drawable/custom_button"
+            android:text="Signup"
+            android:textAllCaps="false"
+            android:id="@+id/btnSignup"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textSize="23dp" />
+    </LinearLayout>
+    </layout>
