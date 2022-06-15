@@ -27,19 +27,10 @@ class BaiHat : Parcelable {
     fun getNameSong(): String? {
         return nameSong
     }
-    @JvmName("setNameSong1")
-    fun setNameSong(nameSong: String?) {
-        this.nameSong = nameSong
-    }
 
     @JvmName("getNameSinger1")
     fun getNameSinger(): String? {
         return nameSinger
-    }
-
-    @JvmName("setNameSinger1")
-    fun setNameSinger(nameSinger: String?) {
-        this.nameSinger = nameSinger
     }
 
     @JvmName("getLinkSong1")
@@ -64,8 +55,8 @@ class BaiHat : Parcelable {
     companion object {
         @JvmField
         val CREATOR: Creator<BaiHat?> = object : Creator<BaiHat?> {
-            override fun createFromParcel(`in`: Parcel): BaiHat? {
-                return BaiHat(`in`)
+            override fun createFromParcel(parcel: Parcel): BaiHat? {
+                return BaiHat(parcel)
             }
 
             override fun newArray(size: Int): Array<BaiHat?> {

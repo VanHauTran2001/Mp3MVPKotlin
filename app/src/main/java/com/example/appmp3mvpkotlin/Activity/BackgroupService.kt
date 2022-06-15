@@ -1,7 +1,6 @@
 package com.example.appmp3mvpkotlin.Activity
 
 import Model.BaiHat
-import android.annotation.SuppressLint
 import android.app.Service
 import android.content.Intent
 import android.media.AudioManager
@@ -19,10 +18,10 @@ import org.jsoup.select.Elements
 import java.io.IOException
 import java.util.*
 
-class BackgroupService : Service(), OnBufferingUpdateListener,
+class BackgroupService : Service(),OnBufferingUpdateListener,
     OnCompletionListener, OnPreparedListener {
     private val myLocalBinder: MyLocalBinder = MyLocalBinder()
-    private var baiHatList: List<BaiHat>? = ArrayList<BaiHat>()
+    private var baiHatList: List<BaiHat>? = ArrayList()
     var currentPosition = -1
     var isPrepared :Boolean = false
     var mediaPlayer: MediaPlayer? = MediaPlayer()
@@ -82,8 +81,9 @@ class BackgroupService : Service(), OnBufferingUpdateListener,
 
     fun sizeItemMusicOnline(): Int {
         return if (baiHatList == null) {
-            0
-        } else baiHatList!!.size
+            return 0
+        } else
+            return baiHatList!!.size
     }
 
     fun getData(position: Int): BaiHat {
@@ -102,7 +102,7 @@ class BackgroupService : Service(), OnBufferingUpdateListener,
             }
             mediaPlayer = MediaPlayer()
             mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
-            mediaPlayer!!.setDataSource(this, Uri.parse(baiHatList!![position].getLinkSong()))
+            mediaPlayer!!.setDataSource(baiHatList?.get(position)?.getLinkSong())
         } catch (e: IOException) {
             e.printStackTrace()
         }
@@ -218,11 +218,11 @@ class BackgroupService : Service(), OnBufferingUpdateListener,
     }
 
     fun checkEmpty(): Boolean {
-        return baiHatList == null || baiHatList!!.size == 0
+        return baiHatList == null || baiHatList!!.isEmpty()
     }
-    public class MyLocalBinder : Binder() {
-        fun getService()  :BackgroupService{
-            return BackgroupService()
+    inner class MyLocalBinder : Binder() {
+        fun getService():BackgroupService{
+            return this@BackgroupService
         }
     }
     override fun onDestroy() {

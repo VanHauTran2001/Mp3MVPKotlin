@@ -6,9 +6,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.net.wifi.WifiConfiguration.AuthAlgorithm.strings
 import android.os.AsyncTask
-import android.os.AsyncTask.execute
 import android.os.Bundle
 import android.os.IBinder
 import android.text.Editable
@@ -30,7 +28,6 @@ import org.jsoup.nodes.Document
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import kotlin.collections.ArrayList
 
 class FragmentListNhac : Fragment() ,AdapterBaiHat.IListen,TextWatcher{
     private var binding : FragmentListNhacBinding?=null
@@ -45,17 +42,18 @@ class FragmentListNhac : Fragment() ,AdapterBaiHat.IListen,TextWatcher{
         viewLoading()
         binding!!.imgSearch.setOnClickListener(View.OnClickListener {
             val txtSearch = binding!!.edtSearch.text.toString().trim()
-            searchSong(txtSearch.trim().replace(" ","+"))
+            searchSong(txtSearch.trim { it <= ' ' }.replace(" ", "+"))
         })
         adapterBaiHat = AdapterBaiHat(this)
         mService = BackgroupService()
-        configRecylerView()
         connectService()
+        configRecylerView()
         binding!!.imgBackHome.setOnClickListener {
             activity?.startActivity(Intent(activity,MainActivity::class.java))
         }
         return binding!!.root
     }
+    @SuppressLint("UseRequireInsteadOfGet")
     private fun searchSong(keySearch: String) {
         if (executorService != null && executorService!!.isShutdown) {
             executorService!!.shutdown()
@@ -63,47 +61,50 @@ class FragmentListNhac : Fragment() ,AdapterBaiHat.IListen,TextWatcher{
         executorService = Executors.newFixedThreadPool(1)
         val urlSearch = "https://chiasenhac.vn/tim-kiem?q=$keySearch"
         configRecylerView()
-//        DowloadTask().execute(urlSearch)
-
+        DowloadTask(this).execute(urlSearch)
     }
-//    class DowloadTask : AsyncTask<String?, Void?,ArrayList<BaiHat>?>() {
-//        override fun doInBackground(vararg p0: String?):ArrayList<BaiHat>? {
-//            val document: Document
-//            try {
-//                document = Jsoup.connect(strings[0]).get()
-//                val elements = Objects.requireNonNull(document.select("div.tab-content").first())!!
-//                    .select("ul.list_music")
-//                for (e in elements) {
-//                    val elements1 = e.select("li.media")
-//                    for (e1 in elements1) {
-//                        val name = Objects.requireNonNull(e1.select("a.search_title").first())!!
-//                            .attr("title")
-//                        val singer = e1.select("div.media-body").select("div.author").text()
-//                        val link = Objects.requireNonNull(e1.select("a.search_title").first())!!
-//                            .attr("href")
-//                        val document1 = Jsoup.connect(link).get()
-//                        val elementLink = document1.select("div.tab-content").first()
-//                        val linkMP3 = elementLink!!.select("a.download_item").attr("href")
-//                        baiHat.add(BaiHat(name, singer, linkMP3))
-//                    }
-//                }
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//            }
-//            return baiHatArrayList
-//        }
-//
-//        @SuppressLint("NotifyDataSetChanged")
-//        override fun onPostExecute(baiHats:ArrayList<BaiHat>?) {
-//            super.onPostExecute(baiHats)
-//            executorService = null
-//            if (baiHats != null) {
-//                mService.setBaiHatList(baiHats)
-//            }
-//            binding.recylerBaiHat.getAdapter().notifyDataSetChanged()
-//            hideLoading()
-//        }
-//    }
+    companion object{
+    class DowloadTask(val context: FragmentListNhac?) : AsyncTask<String?, Void?,ArrayList<BaiHat>?>() {
+        override fun doInBackground(vararg strings: String?):ArrayList<BaiHat>? {
+            val document: Document
+            context!!.baiHatArrayList = context!!.mService!!.getBaiHatList() as ArrayList<BaiHat>
+            try {
+                document = Jsoup.connect(strings[0]).get()
+                val elements = Objects.requireNonNull(document.select("div.tab-content").first())!!
+                    .select("ul.list_music")
+                for (e in elements) {
+                    val elements1 = e.select("li.media")
+                    for (e1 in elements1) {
+                        val name = Objects.requireNonNull(e1.select("a.search_title").first())!!
+                            .attr("title")
+                        val singer = e1.select("div.media-body").select("div.author").text()
+                        val link = Objects.requireNonNull(e1.select("a.search_title").first())!!
+                            .attr("href")
+                        val document1 = Jsoup.connect(link).get()
+                        val elementLink = document1.select("div.tab-content").first()
+                        val linkMP3 = elementLink!!.select("a.download_item").attr("href")
+                        context!!.baiHatArrayList.add(BaiHat(name,singer,linkMP3))
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            return context!!.baiHatArrayList
+        }
+
+        @SuppressLint("NotifyDataSetChanged")
+        override fun onPostExecute(baiHats:ArrayList<BaiHat>?) {
+            super.onPostExecute(baiHats)
+            context!!.executorService = null
+            if (baiHats != null) {
+                context.mService?.setBaiHatList(baiHats)
+            }
+            context.binding?.recylerBaiHat?.getAdapter()?.notifyDataSetChanged()
+            context.hideLoading()
+        }
+    }
+    }
+
     @SuppressLint("UseRequireInsteadOfGet")
     private fun connectService() {
         connection = object : ServiceConnection {
@@ -112,7 +113,7 @@ class FragmentListNhac : Fragment() ,AdapterBaiHat.IListen,TextWatcher{
                 mService = binder.getService()
                 isBound = true
                 if (mService!!.checkEmpty()) {
-                    searchSong("ai+chung+tinh+duoc+mai")
+                    searchSong("em")
                 } else {
                     binding!!.recylerBaiHat.adapter!!.notifyDataSetChanged()
                     if (mService!!.getBaiHatList() != null) {
@@ -120,13 +121,12 @@ class FragmentListNhac : Fragment() ,AdapterBaiHat.IListen,TextWatcher{
                     }
                 }
             }
-
             override fun onServiceDisconnected(componentName: ComponentName) {
                 isBound = false
             }
         }
         val intent = Intent()
-        intent.setClassName(activity!!, BackgroupService::class.java.getName())
+        intent.setClassName(activity!!, BackgroupService::class.java.name)
         activity?.bindService(intent, connection as ServiceConnection, Context.BIND_AUTO_CREATE)
     }
 
@@ -177,7 +177,7 @@ class FragmentListNhac : Fragment() ,AdapterBaiHat.IListen,TextWatcher{
     }
 
     override fun afterTextChanged(p0: Editable?) {
-        searchSong(p0.toString().replace(" "," ").replace(" ","+"))
+        searchSong(p0.toString().replace("  ", " ").replace(" ", "+"))
     }
 
 

@@ -22,17 +22,15 @@ class AdapterBaiHat : RecyclerView.Adapter<AdapterBaiHat.BaiHatViewHolder> {
         val view: View =
             LayoutInflater.from(parent.context).inflate(R.layout.item_list_nhac, parent, false)
         binding = DataBindingUtil.bind(view)
-        return BaiHatViewHolder(binding!!.getRoot())
+        return BaiHatViewHolder(binding!!.root)
     }
 
     override fun onBindViewHolder(holder: BaiHatViewHolder, @SuppressLint("RecyclerView") position: Int) {
         val baiHats: BaiHat = iListen!!.getData(position)!!
-        binding!!.txtTenBaiHat.setText(baiHats.getNameSong())
-        binding!!.txtTenCaSiBaiHat.setText(baiHats.getNameSinger())
+        binding!!.txtTenBaiHat.text = baiHats.getNameSong()
+        binding!!.txtTenCaSiBaiHat.text = baiHats.getNameSinger()
         holder.itemView.setOnClickListener(View.OnClickListener { view: View? ->
-            iListen!!.onClickBaiHat(
-                position
-            )
+            iListen!!.onClickBaiHat(position)
         })
     }
 

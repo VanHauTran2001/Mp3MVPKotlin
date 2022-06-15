@@ -13,6 +13,7 @@ import android.os.SystemClock
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -27,7 +28,6 @@ class FragmentPlayNhac : Fragment() {
     private var binding : FragmentPlayNhacBinding?= null
 //    val TAG = FragmentPlayNhac::class.java.name
     private var isRunning: Boolean = false
-
     //Service
     private var myService: BackgroupService? = null
     private var serviceConnection: ServiceConnection? = null
@@ -53,7 +53,7 @@ class FragmentPlayNhac : Fragment() {
             override fun onServiceDisconnected(componentName: ComponentName) {}
         }
         val intent = Intent()
-        intent.setClassName(activity!!, BackgroupService::class.java.getName())
+        intent.setClassName(activity!!, BackgroupService::class.java.name)
         activity?.bindService(intent, serviceConnection as ServiceConnection, Context.BIND_AUTO_CREATE)
     }
     private fun updateInfo() {
@@ -61,8 +61,8 @@ class FragmentPlayNhac : Fragment() {
             return
         }
         val currentSong: BaiHat = myService!!.currentItem() ?: return
-        binding!!.txtTenBaiHatPlay.setText(currentSong.getNameSong())
-        binding!!.txtCaSiPlay.setText(currentSong.getNameSinger())
+        binding!!.txtTenBaiHatPlay.text = currentSong.getNameSong()
+        binding!!.txtCaSiPlay.text = currentSong.getNameSinger()
         if (myService!!.isPlaying()) {
             Glide.with(binding!!.imgPlay)
                 .load(R.drawable.ic_pause)
@@ -87,8 +87,6 @@ class FragmentPlayNhac : Fragment() {
                 }
                 return null
             }
-
-
             @SuppressLint("SimpleDateFormat")
             override fun onProgressUpdate(vararg values: Int?) {
                 super.onProgressUpdate(*values)
@@ -108,22 +106,22 @@ class FragmentPlayNhac : Fragment() {
             myService!!.randum()
             updateInfo()
         })
-//        binding!!.seekBarPlaynhac.setOnSeekBarChangeListener(SeekBar.OnSeekBarChangeListener(){
-//            fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-//                if (fromUser) {
-//                    myService!!.getMediaPlayer()
-//                        .seekTo(myService!!.getMediaPlayer().duration / 100 * progress)
-//                    binding!!.seekBarPlaynhac.progress = progress
-//                }
-//            }
-//            fun onStartTrackingTouch(seekBar: SeekBar?) {}
-//            fun onStopTrackingTouch(seekBar: SeekBar?) {}
-//        })
-        binding!!.imgPlay.setOnClickListener { view ->
+        binding!!.seekBarPlaynhac.setOnSeekBarChangeListener(object :SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                if (fromUser) {
+                    myService!!.getMediaPlayer()
+                        .seekTo(myService!!.getMediaPlayer().duration / 100 * progress)
+                    binding!!.seekBarPlaynhac.progress = progress
+                }
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {}
+        })
+        binding!!.imgPlay.setOnClickListener {
             myService!!.pause()
             updateInfo()
         }
-        binding!!.imgPreview.setOnClickListener { v ->
+        binding!!.imgPreview.setOnClickListener {
             Glide.with(binding!!.imgPlay).load(R.drawable.iconplay)
                 .into(
                     binding!!.imgPlay
@@ -149,7 +147,6 @@ class FragmentPlayNhac : Fragment() {
             myService!!.getMediaPlayer().stop()
             fragmentManager!!.popBackStack()
         }
-
     }
 
 }
