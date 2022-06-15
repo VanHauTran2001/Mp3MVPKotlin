@@ -30,7 +30,6 @@ class BackgroupService : Service(),OnBufferingUpdateListener,
     fun getBaiHatList(): List<BaiHat>? {
         return baiHatList
     }
-
     fun setBaiHatList(baiHatList: List<BaiHat>?) {
         this.baiHatList = baiHatList
     }
@@ -103,7 +102,7 @@ class BackgroupService : Service(),OnBufferingUpdateListener,
             mediaPlayer = MediaPlayer()
             mediaPlayer!!.setAudioStreamType(AudioManager.STREAM_MUSIC)
             mediaPlayer!!.setDataSource(baiHatList?.get(position)?.getLinkSong())
-        } catch (e: IOException) {
+        }catch (e: IOException) {
             e.printStackTrace()
         }
         mediaPlayer!!.setOnBufferingUpdateListener(this)

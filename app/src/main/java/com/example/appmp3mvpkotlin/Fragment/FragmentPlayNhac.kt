@@ -26,7 +26,6 @@ import java.util.concurrent.Executors
 
 class FragmentPlayNhac : Fragment() {
     private var binding : FragmentPlayNhacBinding?= null
-//    val TAG = FragmentPlayNhac::class.java.name
     private var isRunning: Boolean = false
     //Service
     private var myService: BackgroupService? = null
@@ -39,6 +38,9 @@ class FragmentPlayNhac : Fragment() {
         customToolbar()
         evenClick()
         return binding!!.root
+    }
+    companion object{
+        val TAG = FragmentPlayNhac::class.java.name
     }
     @SuppressLint("UseRequireInsteadOfGet")
     private fun connectService() {

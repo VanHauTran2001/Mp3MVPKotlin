@@ -42,12 +42,12 @@ class FragmentListNhac : Fragment() ,AdapterBaiHat.IListen,TextWatcher{
         viewLoading()
         binding!!.imgSearch.setOnClickListener(View.OnClickListener {
             val txtSearch = binding!!.edtSearch.text.toString().trim()
-            searchSong(txtSearch.trim { it <= ' ' }.replace(" ", "+"))
+            searchSong(txtSearch.trim().replace(" ", "+"))
         })
         adapterBaiHat = AdapterBaiHat(this)
         mService = BackgroupService()
-        connectService()
         configRecylerView()
+        connectService()
         binding!!.imgBackHome.setOnClickListener {
             activity?.startActivity(Intent(activity,MainActivity::class.java))
         }
@@ -113,7 +113,7 @@ class FragmentListNhac : Fragment() ,AdapterBaiHat.IListen,TextWatcher{
                 mService = binder.getService()
                 isBound = true
                 if (mService!!.checkEmpty()) {
-                    searchSong("em")
+                    searchSong("chiều+thu")
                 } else {
                     binding!!.recylerBaiHat.adapter!!.notifyDataSetChanged()
                     if (mService!!.getBaiHatList() != null) {
@@ -165,7 +165,7 @@ class FragmentListNhac : Fragment() ,AdapterBaiHat.IListen,TextWatcher{
     fun replaceFragment(fragment: Fragment?) {
         val transaction = activity?.supportFragmentManager?.beginTransaction()
         transaction!!.replace(R.id.frameLayout, fragment!!)
-//        transaction!!.addToBackStack(FragmentPlayNhac.TAG)
+        transaction!!.addToBackStack(FragmentPlayNhac.TAG)
         transaction!!.commit()
     }
     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -182,7 +182,7 @@ class FragmentListNhac : Fragment() ,AdapterBaiHat.IListen,TextWatcher{
 
 
     override fun onDestroy() {
-        mService!!.unbindService(connection!!)
+
         super.onDestroy()
     }
 }

@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputType
+import android.text.method.HideReturnsTransformationMethod
+import android.text.method.PasswordTransformationMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -35,17 +37,16 @@ class SignInFragment : Fragment(),ISigninView{
     }
 
     fun onChecked() {
-
         if(passWordnotVisible==1){
             biding?.imgCheckPass?.setImageResource(R.drawable.ic_baseline_visibility_off_24)
-            biding?.edtPassword?.inputType?.and(InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD)
+            biding?.edtPassword?.transformationMethod = HideReturnsTransformationMethod.getInstance()
             passWordnotVisible = 0
         }else{
             biding?.imgCheckPass?.setImageResource(R.drawable.ic_check_on )
-            biding?.edtPassword?.setInputType(InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD)
+            biding?.edtPassword?.transformationMethod = PasswordTransformationMethod.getInstance()
             passWordnotVisible = 1
         }
-        biding?.edtPassword?.setSelection(edtPassword.length())
+        biding?.edtPassword?.setSelection(biding!!.edtPassword.length())
     }
 
     override fun onClickListener() {
