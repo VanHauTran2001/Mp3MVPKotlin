@@ -29,7 +29,7 @@ import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
-class FragmentListNhac : Fragment() ,AdapterBaiHat.IListen,TextWatcher{
+class FragmentListNhac : Fragment() ,AdapterBaiHat.IListen{
     private var binding : FragmentListNhacBinding?=null
     private var mService : BackgroupService?=null
     private var executorService : ExecutorService?=null
@@ -40,21 +40,23 @@ class FragmentListNhac : Fragment() ,AdapterBaiHat.IListen,TextWatcher{
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_list_nhac,container,false)
         viewLoading()
-        binding!!.imgSearch.setOnClickListener(View.OnClickListener {
-            val txtSearch = binding!!.edtSearch.text.toString().trim()
-            searchSong(txtSearch.trim().replace(" ", "+"))
-        })
         adapterBaiHat = AdapterBaiHat(this)
         mService = BackgroupService()
-        configRecylerView()
         connectService()
         binding!!.imgBackHome.setOnClickListener {
             activity?.startActivity(Intent(activity,MainActivity::class.java))
         }
+        binding!!.imgSearch.setOnClickListener(View.OnClickListener {
+            val txtSearch = binding!!.edtSearch.text.toString().trim()
+            searchSong(txtSearch.trim { it <= ' ' }.replace(" ", "+"))
+        })
+        configRecylerView()
         return binding!!.root
     }
     @SuppressLint("UseRequireInsteadOfGet")
     private fun searchSong(keySearch: String) {
+        baiHatArrayList.clear()
+        viewLoading()
         if (executorService != null && executorService!!.isShutdown) {
             executorService!!.shutdown()
         }
@@ -86,6 +88,7 @@ class FragmentListNhac : Fragment() ,AdapterBaiHat.IListen,TextWatcher{
                         context!!.baiHatArrayList.add(BaiHat(name,singer,linkMP3))
                     }
                 }
+
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -163,24 +166,13 @@ class FragmentListNhac : Fragment() ,AdapterBaiHat.IListen,TextWatcher{
         replaceFragment(FragmentPlayNhac())
     }
     fun replaceFragment(fragment: Fragment?) {
+//        activity?.supportFragmentManager?.beginTransaction()?.add(R.id.frameLayout,FragmentListNhac(),FragmentListNhac::class.java.name)
+//            ?.addToBackStack(FragmentPlayNhac.TAG)?.commit()
         val transaction = activity?.supportFragmentManager?.beginTransaction()
         transaction!!.replace(R.id.frameLayout, fragment!!)
         transaction!!.addToBackStack(FragmentPlayNhac.TAG)
         transaction!!.commit()
     }
-    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-    }
-
-    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
-    }
-
-    override fun afterTextChanged(p0: Editable?) {
-        searchSong(p0.toString().replace("  ", " ").replace(" ", "+"))
-    }
-
-
     override fun onDestroy() {
 
         super.onDestroy()

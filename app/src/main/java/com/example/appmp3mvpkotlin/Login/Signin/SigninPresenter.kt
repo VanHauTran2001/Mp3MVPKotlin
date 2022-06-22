@@ -22,6 +22,8 @@ class SigninPresenter : ISigninPresenter {
 
     override fun onUnit() {
         view?.onClickListener()
+        view?.customLogin()
+        view?.onChecked()
     }
 
     override fun onLogin(email: String, password: String) {

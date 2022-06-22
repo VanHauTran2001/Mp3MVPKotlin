@@ -21,7 +21,7 @@ class SignInFragment : Fragment(),ISigninView{
     private var biding : SigninFragmentBinding? = null
     private var signinPresenter : ISigninPresenter? = null
 
-    private var passWordnotVisible: Int = 1
+    private var passWordnotVisible: Int = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         biding = DataBindingUtil.inflate(inflater,R.layout.signin_fragment,container,false)
@@ -30,13 +30,13 @@ class SignInFragment : Fragment(),ISigninView{
         return biding?.root
     }
 
-    fun customLogin() {
+    override fun customLogin() {
         var email:String = biding?.edtEmail?.text.toString().trim()
         var password : String = biding?.edtPassword?.text.toString().trim()
         signinPresenter?.onLogin(email,password)
     }
 
-    fun onChecked() {
+    override fun onChecked() {
         if(passWordnotVisible==1){
             biding?.imgCheckPass?.setImageResource(R.drawable.ic_baseline_visibility_off_24)
             biding?.edtPassword?.transformationMethod = HideReturnsTransformationMethod.getInstance()

@@ -7,4 +7,6 @@ interface ISigninView {
     fun onSuccessfull(mess : String)
     fun onError(mess : String)
     fun onContext(): Context?
+    fun customLogin();
+    fun onChecked();
 }
